@@ -16,8 +16,13 @@ for(var i=0;i<addtocartButtons.length;i++){
 }
 document.getElementsByClassName('btn-purchase')[0].addEventListener('click',purchase)
 
-var cart=document.getElementsByClassName('container-content-section')[0];
+var cart=document.getElementsByClassName('right')[0];
 document.getElementById('seethecart').addEventListener('click',()=>{
+    cart.classList.toggle('active')
+})
+
+var cartBtn=document.getElementById('cartbtn');
+cartBtn.addEventListener('click',()=>{
     cart.classList.toggle('active')
 })
 
@@ -77,7 +82,7 @@ function addItemToCart(title,price,imageSrc){
 <span class="cart-price cart-column">${price}</span>
 <div class="cart-quantity cart-column">
     <input class="cart-quantity-input" type="number" value="1">
-    <button class="btn btn-danger" type="button">REMOVE</button>
+    <button class="btn btn-danger" type="button">X</button>
 </div>`;
     cartRow.innerHTML=cartRowContents;
     cartRow.classList.add('cart-row')
