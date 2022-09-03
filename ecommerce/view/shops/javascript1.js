@@ -9,11 +9,7 @@ for(var i=0;i<removeCartItem.length;i++){
         var input=quantityInputs[i];
         input.addEventListener('change',quantityChange)
     }
-var addtocartButtons=document.getElementsByClassName('addtocart');
-for(var i=0;i<addtocartButtons.length;i++){
-    var button=addtocartButtons[i];
-    button.addEventListener('click',addtToCartClicked);
-}
+
 document.getElementsByClassName('btn-purchase')[0].addEventListener('click',purchase)
 
 var cart=document.getElementsByClassName('right')[0];
@@ -26,6 +22,38 @@ cartBtn.addEventListener('click',()=>{
     cart.classList.toggle('active')
 })
 
+const musiccontent=document.getElementsByClassName('music-content')[0];
+window.addEventListener('DOMContentLoaded',()=>{
+    axios.get('http://localhost:3000/products').then((data)=>{
+
+       if(data.request.status==200){
+            const products=data.data.products;
+            products.forEach(element => {
+                const prodHtml=
+                `<div class="Album">
+                <h4 class="shopTitle">${element.title}</h4>
+                <div class="image">
+                    <img src="${element.imageUrl}" alt="tape">
+                </div>
+                <div class="buy">
+                    <span class="price">${element.price}</span>
+                    <button class="addtocart">ADD TO CART</button>
+                </div>
+                </div>`;
+                musiccontent.innerHTML+= prodHtml
+
+            });
+        }
+    }).catch(err=>console.log(err))
+    
+})
+
+var addtocartButtons=document.getElementsByClassName('addtocart');
+console.log(addtocartButtons.length)
+for(var i=0;i<addtocartButtons.length;i++){
+    var button=addtocartButtons[i];
+    button.addEventListener('click',addtToCartClicked);
+}
 
 
 function addtToCartClicked(e){
