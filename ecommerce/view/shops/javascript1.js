@@ -29,18 +29,19 @@ window.addEventListener('DOMContentLoaded',()=>{
        if(data.request.status==200){
             const products=data.data.products;
             products.forEach(element => {
-                const prodHtml=
-                `<div class="Album">
-                <h4 class="shopTitle">${element.title}</h4>
+                const prodHtml=document.createElement('div');
+                prodHtml.innerHTML= 
+                `<h4 class="shopTitle">${element.title}</h4>
                 <div class="image">
                     <img src="${element.imageUrl}" alt="tape">
                 </div>
                 <div class="buy">
                     <span class="price">${element.price}</span>
-                    <button class="addtocart">ADD TO CART</button>
-                </div>
+                    <button class="addtocart" onClick="addToCart(${element.id})">ADD TO CART</button>
                 </div>`;
-                musiccontent.innerHTML+= prodHtml
+                prodHtml.classList.add('Album');
+                musiccontent.append(prodHtml);
+ 
 
             });
         }
@@ -48,8 +49,28 @@ window.addEventListener('DOMContentLoaded',()=>{
     
 })
 
+function addToCart(productId){
+    axios.post('http://localhost:3000/cart',{productId:productId}).then(res=>{
+ 
+        if(res.status==200){
+            
+            notify(res.data.message);
+        }
+    }).catch(err=>notify(res.data.message));
+}
+
+function notify(message){
+    const notif=document.createElement('div');
+    notif.classList.add('toast');
+    notif.innerText=`${message}`;
+    container.appendChild(notif);
+
+    setTimeout(()=>{
+        notif.remove();
+    },3000)
+}
+
 var addtocartButtons=document.getElementsByClassName('addtocart');
-console.log(addtocartButtons.length)
 for(var i=0;i<addtocartButtons.length;i++){
     var button=addtocartButtons[i];
     button.addEventListener('click',addtToCartClicked);
