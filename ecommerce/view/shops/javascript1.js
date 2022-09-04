@@ -23,6 +23,8 @@ cartBtn.addEventListener('click',()=>{
 })
 
 const musiccontent=document.getElementsByClassName('music-content')[0];
+var cartItems=document.getElementsByClassName('cart-items')[0];
+
 window.addEventListener('DOMContentLoaded',()=>{
     axios.get('http://localhost:3000/products').then((data)=>{
 
@@ -41,9 +43,33 @@ window.addEventListener('DOMContentLoaded',()=>{
                 </div>`;
                 prodHtml.classList.add('Album');
                 musiccontent.append(prodHtml);
- 
-
             });
+        }
+    }).catch(err=>console.log(err));
+
+
+    axios.get('http://localhost:3000/cart').then(data=>{
+        console.log(data)
+        if(data.request.status==200){
+            const cartprod=data.data.products;
+            cartprod.forEach(ele=>{
+                const Childdiv=document.createElement('div');
+                Childdiv.innerHTML=`<div class="cart-item cart-column">
+                <img class="cart-item-image" src="${ele.imageUrl}" width="100" height="100">
+                <span class="cart-item-title">${ele.title}</span>
+            </div>
+            <span class="cart-price cart-column">${ele.price}</span>
+            <div class="cart-quantity cart-column">
+                <input class="cart-quantity-input" type="number" value="${ele.cartItem.quantity}">
+                <button class="btn btn-danger" type="button">X</button>
+            </div>`;
+            Childdiv.classList.add('cart-row');
+            Childdiv.getElementsByClassName('cart-quantity-input')[0].addEventListener('change',quantityChange);
+            Childdiv.getElementsByClassName('btn-danger')[0].addEventListener('click',removeItem)
+            cartItems.append(Childdiv);
+            updateCartTotal();
+
+            })
         }
     }).catch(err=>console.log(err))
     
