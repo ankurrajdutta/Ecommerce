@@ -26,10 +26,10 @@ const musiccontent=document.getElementsByClassName('music-content')[0];
 var cartItems=document.getElementsByClassName('cart-items')[0];
 
 window.addEventListener('DOMContentLoaded',()=>{
-    axios.get('http://localhost:3000/products').then((data)=>{
-
+    axios.get('http://localhost:3000/?page=1').then((data)=>{
+       console.log(data)
        if(data.request.status==200){
-            const products=data.data.products;
+            const products=data.data;
             products.forEach(element => {
                 const prodHtml=document.createElement('div');
                 prodHtml.innerHTML= 
@@ -197,4 +197,35 @@ function updateCartTotal(){
     }
     total=Math.round(total*100)/100;
     document.getElementsByClassName('cart-total-price')[0].innerText='$'+total
+}
+
+const paginationBtns=document.getElementsByClassName('pagination-btn');
+for(var i=0;i<paginationBtns.length;i++){
+    paginationBtns[i].addEventListener('click',showProds);
+}
+function showProds(e){
+    var pagenumber=e.target.value;
+    axios.get(`http://localhost:3000/?page=${pagenumber}`).then(data=>{
+        console.log(data);
+        musiccontent.innerHTML=''
+        if(data.request.status==200){
+            const products=data.data;
+            products.forEach(element => {
+                const prodHtml=document.createElement('div');
+                prodHtml.innerHTML= 
+                `<h4 class="shopTitle">${element.title}</h4>
+                <div class="image">
+                    <img src="${element.imageUrl}" alt="tape">
+                </div>
+                <div class="buy">
+                    <span class="price">${element.price}</span>
+                    <button class="addtocart" onClick="addToCart(${element.id})">ADD TO CART</button>
+                </div>`;
+                prodHtml.classList.add('Album');
+                musiccontent.append(prodHtml);
+            });
+        }
+        
+
+    }).catch(err=>console.log(err));
 }

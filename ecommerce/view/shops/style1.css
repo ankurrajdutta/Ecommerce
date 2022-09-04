@@ -269,4 +269,10 @@ input{
     background-color: #56CCF2;
 }
 
+.pagination{
+    text-align: center;
+}
+.pagination button{
+    padding: 5px;
+}
 
