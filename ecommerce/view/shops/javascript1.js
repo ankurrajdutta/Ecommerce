@@ -49,31 +49,52 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 
     axios.get('http://localhost:3000/cart').then(data=>{
+        console.log('data')
         console.log(data)
         if(data.request.status==200){
             const cartprod=data.data.products;
-            cartprod.forEach(ele=>{
-                const Childdiv=document.createElement('div');
-                Childdiv.innerHTML=`<div class="cart-item cart-column">
-                <img class="cart-item-image" src="${ele.imageUrl}" width="100" height="100">
-                <span class="cart-item-title">${ele.title}</span>
-            </div>
-            <span class="cart-price cart-column">${ele.price}</span>
-            <div class="cart-quantity cart-column">
-                <input class="cart-quantity-input" type="number" value="${ele.cartItem.quantity}">
-                <button class="btn btn-danger" type="button">X</button>
-            </div>`;
-            Childdiv.classList.add('cart-row');
-            Childdiv.getElementsByClassName('cart-quantity-input')[0].addEventListener('change',quantityChange);
-            Childdiv.getElementsByClassName('btn-danger')[0].addEventListener('click',removeItem)
-            cartItems.append(Childdiv);
-            updateCartTotal();
-
-            })
+            if(cartprod.length>0){
+                cartprod.forEach(ele=>{
+                    const Childdiv=document.createElement('div');
+                    Childdiv.innerHTML=`<div class="cart-item cart-column">
+                    <img class="cart-item-image" src="${ele.imageUrl}" width="100" height="100">
+                    <span class="cart-item-title">${ele.title}</span>
+                </div>
+                <span class="cart-price cart-column">${ele.price}</span>
+                <div class="cart-quantity cart-column">
+                    <input class="cart-quantity-input" type="number" value="${ele.cartItem.quantity}">
+                    <button class="btn btn-danger" type="button">X</button>
+                </div>`;
+                Childdiv.classList.add('cart-row');
+                Childdiv.getElementsByClassName('cart-quantity-input')[0].addEventListener('change',quantityChange);
+                Childdiv.getElementsByClassName('btn-danger')[0].addEventListener('click',removeItem)
+                cartItems.append(Childdiv);
+                updateCartTotal();
+    
+                })
+            }else{
+                console.log(document.getElementById('cartPurchaseBtn'))
+                document.getElementById('cartPurchaseBtn').style.display="none";
+            }
         }
-    }).catch(err=>console.log(err))
+       
+
+            
+      
+    }).catch(err=>{console.log('catchCart');
+       
+        console.log(err)})
     
 })
+
+document.getElementById('cartPurchaseBtn').addEventListener('click',placeOrder);
+
+function placeOrder(){
+    axios.post('http://localhost:3000/orders').then(orderDetails => {
+        console.log(orderDetails.data.orderDetails);
+        alert(`Order successfully placed with id:${orderDetails.data.orderDetails.id}`).catch(err=>console.log(err));
+    })
+}
 
 function addToCart(productId){
     axios.post('http://localhost:3000/cart',{productId:productId}).then(res=>{
