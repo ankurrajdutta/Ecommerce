@@ -42,6 +42,7 @@ window.addEventListener('DOMContentLoaded',()=>{
                     <button class="addtocart" onClick="addToCart(${element.id})">ADD TO CART</button>
                 </div>`;
                 prodHtml.classList.add('Album');
+                prodHtml.getElementsByClassName('addtocart')[0].addEventListener('click',addtToCartClicked);
                 musiccontent.append(prodHtml);
             });
         }
@@ -117,7 +118,10 @@ function notify(message){
     },3000)
 }
 
+
 var addtocartButtons=document.getElementsByClassName('addtocart');
+console.log('Hi')
+console.log(addtocartButtons);
 for(var i=0;i<addtocartButtons.length;i++){
     var button=addtocartButtons[i];
     button.addEventListener('click',addtToCartClicked);
